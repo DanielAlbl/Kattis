@@ -22,7 +22,7 @@ map<pare, int> mx;
 
 inline void getSome(shlong &N) {
     shlong n = N;
-   
+
     for (shlong i = 2; i * i <= n; i++) {
         if (n % i == 0) {
             primes.insert(i);
@@ -34,7 +34,7 @@ inline void getSome(shlong &N) {
     if(n != 1)
         primes.insert(n);
 
-    for (auto i : primes) 
+    for (auto i : primes)
         N /= i;
 
     shlong sqrt = shlong(sqrtl((long double)N));
@@ -63,7 +63,7 @@ int DP(it d, shlong x) {
         return -1;
 
     // factors larger than x are irrelevent
-    if (*d > x) 
+    if (*d > x)
         return DP(factors.find(x), x);
 
     it p = prev(d);
@@ -91,14 +91,13 @@ int main() {
     if (factors.empty()) {
         if (N != 1 && primes.find(N) == primes.end())
             count++;
-    }
-    else {
+    } else {
         dp = DP(prev(factors.end()), N);
         if (dp == -1)
             dp = 0;
     }
 
     cout << count + dp << endl;
-    
+
     return 0;
 }

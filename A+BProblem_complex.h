@@ -11,11 +11,10 @@ typedef long long shlong;
 typedef long double longD;
 #define PI 3.141592653589793238462643383279502884
 
-class Complex
-{
+class Complex {
     longD a;
     longD b;
-public:
+  public:
     Complex() : a(0), b(0) {}
     Complex(longD A, longD B) : a(A), b(B) {}
     ~Complex() {}
@@ -27,8 +26,12 @@ public:
     static Complex * reverseArray(Complex * arr, shlong size);
     longD mag();
 
-    longD getA() { return a; }
-    longD getB() { return b; }
+    longD getA() {
+        return a;
+    }
+    longD getB() {
+        return b;
+    }
 
     friend Complex operator+(Complex x, Complex y);
     friend Complex operator*(Complex x, Complex y);
@@ -37,5 +40,5 @@ public:
     friend ostream & operator<<(ostream & out, Complex c);
     void operator+=(Complex y);
     void operator*=(Complex y);
-    
+
 };

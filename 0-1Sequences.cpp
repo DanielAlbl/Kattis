@@ -10,8 +10,7 @@ typedef long long shlong;
 shlong pascal[50001];
 
 // size is q+1
-void updatePascal(int q)
-{
+void updatePascal(int q) {
     for (int i = 1; i < (q + 2) / 2; i++)
         pascal[i] = (pascal[q + 1 - i] + pascal[q - i]) % MOD;
     if (q % 2 == 1)
@@ -20,16 +19,14 @@ void updatePascal(int q)
         pascal[q+1-i] = pascal[i];
 }
 
-shlong calculateConstTerm(int q)
-{
+shlong calculateConstTerm(int q) {
     shlong sum = 0;
     for (int i = 1; i < q+1; i++)
         sum = (sum + i * pascal[i]) % MOD;
     return sum;
 }
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char ** argv) {
     char curr;
     shlong last_zero = 0;
     shlong sum = 0;
@@ -38,15 +35,12 @@ int main(int argc, char ** argv)
     shlong qthPow = 1;
     shlong lastPow = 1;
 
-    while (cin >> curr)
-    {
-        if (curr == '0')
-        {
+    while (cin >> curr) {
+        if (curr == '0') {
             sum += ((qthPow * (i - last_zero)) % MOD) - (q*lastPow) % MOD;
             last_zero++;
         }
-        if (curr == '?')
-        {
+        if (curr == '?') {
             sum = (2 * sum) % MOD;
             sum += ((qthPow * (i - last_zero)) % MOD) - (q*lastPow) % MOD;
             lastPow = qthPow;

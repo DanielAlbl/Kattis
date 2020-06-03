@@ -10,20 +10,17 @@ shlong AB(Complex * X, shlong * sums, shlong size, shlong off);
 vector<shlong> v;
 void test();
 
-int main()
-{
+int main() {
     shlong size, temp, off = 0;
     shlong min = numeric_limits<shlong>::max(), max = numeric_limits<shlong>::min();
     shlong count, zeros = 0;
 
     cin >> size;
-    for (shlong i = 0; i < size; i++)
-    {
+    for (shlong i = 0; i < size; i++) {
         cin >> temp;
         if (temp == 0)
             zeros++;
-        else
-        {
+        else {
             zero[temp]++;
             if (temp < min)
                 min = temp;
@@ -33,18 +30,16 @@ int main()
         v.push_back(temp);
     }
 
-    if (min < 0)
-    {
+    if (min < 0) {
         size = max - min;
         off = -min;
-    }
-    else
+    } else
         size = max;
     if (size == 0)
         size = 2;
     else
         size = (shlong)pow(2, ((shlong)log2(size) + 1));
-    
+
     Polynomial<shlong> p(&zero[-off], size);
     size *= 2;
     Complex * temps = p.fft(size);
@@ -55,7 +50,7 @@ int main()
 
     if(size != 0 && 2 * off < size)
         count += (shlong)(X[2 * off].getA() + 0.5) / size * zeros;
-        
+
     count += zeros * (zeros * (zeros - 3) + 2);
 
     for (shlong i = min; i <= max; i++)
@@ -68,13 +63,11 @@ int main()
     return 0;
 }
 
-shlong AB(Complex * X, shlong * sums, shlong size, shlong off)
-{
+shlong AB(Complex * X, shlong * sums, shlong size, shlong off) {
     shlong count = 0;
     shlong sSize = size / 2;
     shlong xSize = size - off;
-    for (shlong i = 0; i < sSize && i < xSize; i++) 
-    {
+    for (shlong i = 0; i < sSize && i < xSize; i++) {
         count += (shlong)(X[i].getA() + 0.5) / size * sums[i];
         if (abs(i - off) % 2 == 0)
             count -= sums[i] * (zero[(i - off) / 2]);
@@ -82,8 +75,7 @@ shlong AB(Complex * X, shlong * sums, shlong size, shlong off)
     return count;
 }
 
-void test()
-{
+void test() {
     shlong count = 0;
 
     for (int i = 0; i < v.size(); i++)

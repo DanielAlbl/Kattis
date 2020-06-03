@@ -2,8 +2,7 @@
 #include "complex.h"
 
 template <class T>
-class Polynomial
-{
+class Polynomial {
     T * coef;
     shlong size;
 
@@ -12,14 +11,16 @@ class Polynomial
     shlong Xsize;
 
     void fftBackend(shlong numRoots, shlong div = 1, shlong off = 0, shlong Xoff = 0);
-public:
+  public:
     Polynomial(shlong size);
     Polynomial(T * Coef, shlong Size) : coef(Coef), size(Size) {}
     Polynomial(Polynomial * f, bool even);
     Polynomial(ifstream &fin);
     ~Polynomial();
 
-    shlong getSize() { return size; }
+    shlong getSize() {
+        return size;
+    }
 
     Complex * fft(shlong numRoots);
     Complex * fftInverse(shlong numRoots);
@@ -30,16 +31,14 @@ public:
 };
 
 template <class T>
-Polynomial<T>::Polynomial(shlong size)
-{
+Polynomial<T>::Polynomial(shlong size) {
     coef = new T[size]();
     this->size = size;
 }
 
 
 template <class T>
-Polynomial<T>::Polynomial(Polynomial<T> * f, bool even)
-{
+Polynomial<T>::Polynomial(Polynomial<T> * f, bool even) {
     size = f->size >> 1;
     coef = new T[size]();
     if (even)
@@ -51,32 +50,27 @@ Polynomial<T>::Polynomial(Polynomial<T> * f, bool even)
 }
 
 template <class T>
-Polynomial<T>::Polynomial(ifstream & fin)
-{
+Polynomial<T>::Polynomial(ifstream & fin) {
     fin >> size;
     // make size next power of 2
     size = (shlong)pow(2, ((shlong)log2(size - 1) + 1));
     coef = new T[size]();
 
     T temp;
-    for (shlong i = size - 1; i >= 0; i--)
-    {
+    for (shlong i = size - 1; i >= 0; i--) {
         fin >> temp;
         coef[i] = temp;
     }
 }
 
 template <class T>
-Polynomial<T>::~Polynomial()
-{
+Polynomial<T>::~Polynomial() {
     //delete[] coef;
 }
 
 template <class T>
-void Polynomial<T>::fftBackend(shlong numRoots, shlong div, shlong off, shlong Xoff)
-{
-    if (numRoots <= 2)
-    {
+void Polynomial<T>::fftBackend(shlong numRoots, shlong div, shlong off, shlong Xoff) {
+    if (numRoots <= 2) {
         for (shlong i = 0; i < numRoots; i++)
             X[Xoff + i] = polynomialize(rootsLookup[div*i], div, off);
         return;
@@ -88,8 +82,7 @@ void Polynomial<T>::fftBackend(shlong numRoots, shlong div, shlong off, shlong X
     fftBackend(numRoots,div<<1,off,Xoff);
     fftBackend(numRoots,div<<1,off+div,Xoff+numRoots);
 
-    for (shlong i = 0; i < numRoots; i++)
-    {
+    for (shlong i = 0; i < numRoots; i++) {
         Complex temp = X[Xoff + i];
         X[Xoff + i] = X[Xoff + i] + rootsLookup[i*div] * X[Xoff + numRoots + i];
         X[Xoff + numRoots + i] = temp + rootsLookup[i*div+(Xsize>>1)] * X[Xoff + numRoots + i];
@@ -97,8 +90,7 @@ void Polynomial<T>::fftBackend(shlong numRoots, shlong div, shlong off, shlong X
 }
 
 template<class T>
-Complex * Polynomial<T>::fftInverse(shlong numRoots)
-{
+Complex * Polynomial<T>::fftInverse(shlong numRoots) {
     Xsize = numRoots;
     X = new Complex[Xsize];
     rootsLookup = Complex::getInverseRoots(Xsize);
@@ -108,8 +100,7 @@ Complex * Polynomial<T>::fftInverse(shlong numRoots)
 }
 
 template<class T>
-Complex * Polynomial<T>::fft(shlong numRoots)
-{
+Complex * Polynomial<T>::fft(shlong numRoots) {
     Xsize = numRoots;
     X = new Complex[numRoots];
     rootsLookup = Complex::getRootsUnity(numRoots);
@@ -121,12 +112,10 @@ Complex * Polynomial<T>::fft(shlong numRoots)
 }
 
 template <class T>
-Complex Polynomial<T>::polynomialize(Complex &x, shlong div, shlong off)
-{
+Complex Polynomial<T>::polynomialize(Complex &x, shlong div, shlong off) {
     Complex f(0, 0);
     Complex xn(1, 0);
-    for (shlong i = off; i < size; i += div)
-    {
+    for (shlong i = off; i < size; i += div) {
         f += coef[i] * xn;
         xn *= x;
     }
@@ -134,8 +123,7 @@ Complex Polynomial<T>::polynomialize(Complex &x, shlong div, shlong off)
 }
 
 template <class T>
-void Polynomial<T>::operator=(Polynomial<T> * p)
-{
+void Polynomial<T>::operator=(Polynomial<T> * p) {
     delete[] coef;
     coef = p->coef;
     size = p->size;
